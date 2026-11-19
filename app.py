@@ -324,7 +324,7 @@ def init_db():
         """,
 
         f"""
-        CREATE TABLE IF NOT EXISTS users(
+        CREATE TABLE IF NOT EXISTS portal_users(
             uid TEXT PRIMARY KEY,
             first_seen {big},
             last_seen {big}
@@ -362,29 +362,29 @@ def init_db():
                 d.execute(q)
 
             # IMPORTANT:
-            # Repair old PostgreSQL users table.
+            # Keep portal visitor tracking separate from any legacy users table.
             # Existing records and tables are NOT deleted.
 
             if USE_PG:
 
                 d.execute("""
-                    ALTER TABLE users
+                    ALTER TABLE portal_users
                     ADD COLUMN IF NOT EXISTS uid TEXT
                 """)
 
                 d.execute("""
-                    ALTER TABLE users
+                    ALTER TABLE portal_users
                     ADD COLUMN IF NOT EXISTS first_seen BIGINT
                 """)
 
                 d.execute("""
-                    ALTER TABLE users
+                    ALTER TABLE portal_users
                     ADD COLUMN IF NOT EXISTS last_seen BIGINT
                 """)
 
                 d.execute("""
                     CREATE UNIQUE INDEX IF NOT EXISTS users_uid_unique
-                    ON users(uid)
+                    ON portal_users(uid)
                 """)
 
             d.commit()
@@ -526,7 +526,7 @@ def guard():
 
         db().execute(
             """
-            INSERT INTO users(uid,first_seen,last_seen)
+            INSERT INTO portal_users(uid,first_seen,last_seen)
             VALUES(?,?,?)
             ON CONFLICT(uid)
             DO UPDATE SET last_seen=excluded.last_seen
@@ -1029,7 +1029,7 @@ def admin():
         ).fetchone()["n"],
 
         "users": d.execute(
-            "SELECT COUNT(*) AS n FROM users"
+            "SELECT COUNT(*) AS n FROM portal_users"
         ).fetchone()["n"]
     }
 
