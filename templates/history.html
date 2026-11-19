@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2 class="h2"><i class="bi bi-clock-history"></i> {{ t('history') }}</h2>
+{% if not rows %}<div class="card glass muted">{{ t('nohist') }}</div>{% endif %}
+<div class="list">
+{% for r in rows %}
+  <a class="card glass row" href="{{ url_for('watch', vid=r.id) }}">
+    <i class="bi bi-play-circle-fill big"></i>
+    <div><b>{{ r.title }}</b>
+      <div class="muted small">{{ CATS[r.category] }} · {{ t('code') }}: {{ r.code[:4] }}••• · {{ t('watched') }}: {{ r.watched_at|dt }} · ×{{ r.count }}</div></div>
+    <span class="badge soft">{{ t('again') }}</span>
+  </a>
+{% endfor %}
+</div>
+{% endblock %}

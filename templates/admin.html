@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block body %}
+{% if DB_ERROR %}<div class="flash err">&#9888; {{ DB_ERROR }}</div>{% endif %}
+<div class="between"><h2 class="h2"><i class="bi bi-speedometer2"></i> Admin Panel</h2>
+<form method="post" action="{{ url_for('admin_logout') }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn sm ghost">Logout</button></form></div>
+<div class="stats">
+  <div class="card glass stat"><i class="bi bi-collection-play-fill"></i><b>{{ stats.total }}</b><span>Total videos</span></div>
+  <div class="card glass stat"><i class="bi bi-unlock-fill"></i><b>{{ stats.free }}</b><span>RF Free</span></div>
+  <div class="card glass stat"><i class="bi bi-gem"></i><b>{{ stats.paid }}</b><span>RF Paid</span></div>
+  <div class="card glass stat"><i class="bi bi-eye-fill"></i><b>{{ stats.views }}</b><span>Total views</span></div>
+  <div class="card glass stat"><i class="bi bi-people-fill"></i><b>{{ stats.users }}</b><span>Users</span></div>
+</div>
+<div class="card glass">
+  <h3>{{ 'Edit video #' ~ edit.id if edit else 'Add new video' }}</h3>
+  <form method="post" action="{{ url_for('admin_save') }}" class="form">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    {% if edit %}<input type="hidden" name="id" value="{{ edit.id }}">{% endif %}
+    <input name="title" placeholder="Title" maxlength="150" value="{{ edit.title if edit }}" required>
+    <select name="category">{% for k, n in CATS.items() %}<option value="{{ k }}" {{ 'selected' if edit and edit.category==k }}>{{ n }}</option>{% endfor %}</select>
+    <input name="code" placeholder="Video code (blank = auto generate)" maxlength="40" value="{{ edit.code if edit }}">
+    <input name="mp4_url" placeholder="MP4 link (https://...)" value="{{ edit.mp4_url if edit }}" required>
+    <input name="file_url" placeholder="Get File button link (optional)" value="{{ edit.file_url if edit }}">
+    <textarea name="description" placeholder="Description (optional)" maxlength="1000">{{ edit.description if edit }}</textarea>
+    <button class="btn" type="submit"><i class="bi bi-save-fill"></i> Save</button>
+    {% if edit %}<a class="btn ghost" href="{{ url_for('admin') }}">Cancel</a>{% endif %}
+  </form>
+</div>
+<div class="card glass"><h3>Videos</h3><div class="scroll"><table>
+<tr><th>ID</th><th>Title</th><th>Category</th><th>Code</th><th>Views</th><th></th></tr>
+{% for v in vids %}<tr><td>{{ v.id }}</td><td>{{ v.title }}</td><td>{{ CATS[v.category] }}</td><td><code>{{ v.code }}</code></td><td>{{ v.views }}</td>
+<td class="acts"><a class="btn sm" href="{{ url_for('admin', edit=v.id) }}">Edit</a>
+<form method="post" action="{{ url_for('admin_delete', vid=v.id) }}" data-confirm="Delete this video?"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn sm danger">Delete</button></form></td></tr>
+{% else %}<tr><td colspan="6" class="muted">No videos yet.</td></tr>{% endfor %}
+</table></div></div>
+<div class="card glass"><h3>Recent activity</h3>
+{% for r in recent %}<div class="muted small">user {{ r.u }} → {{ r.title }} · {{ r.watched_at|dt }}</div>{% else %}<div class="muted">Nothing yet.</div>{% endfor %}</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='app.js') }}"></script>{% endblock %}

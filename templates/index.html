@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}
+<img class="banner glass" src="{{ url_for('static', filename='banner.svg') }}" alt="ZAD OSINT">
+<section class="hero">
+  <h1>{{ t('hero_t') }}</h1><p>{{ t('hero_s') }}</p>
+</section>
+<h2 class="h2">{{ t('choose') }}</h2>
+<div class="grid2">
+  <a class="card glass cat" href="{{ url_for('category', cat='free') }}">
+    <i class="bi bi-unlock-fill big"></i><h3>RF Free</h3><p>{{ t('free_d') }}</p>
+    <span class="badge">{{ counts.get('free', 0) }} {{ t('videos') }}</span>
+  </a>
+  <a class="card glass cat paid" href="{{ url_for('category', cat='paid') }}">
+    <i class="bi bi-gem big"></i><h3>RF Paid</h3><p>{{ t('paid_d') }}</p>
+    <span class="badge">{{ counts.get('paid', 0) }} {{ t('videos') }}</span>
+  </a>
+</div>
+<a class="btn yt" href="{{ YT_URL }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-youtube"></i> {{ t('sub') }}</a>
+{% endblock %}

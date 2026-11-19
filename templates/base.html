@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}{{ BRAND }}{% endblock %}</title>
+<link rel="icon" href="{{ url_for('static', filename='logo.svg') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% block head %}{% endblock %}
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+<nav class="nav glass">
+  <a class="brand" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo.svg') }}" alt=""><b>ZAD</b> OSINT</a>
+  <div class="links">
+    <a href="{{ url_for('index') }}"><i class="bi bi-house-door"></i><span>{{ t('home') }}</span></a>
+    <a href="{{ url_for('history') }}"><i class="bi bi-clock-history"></i><span>{{ t('history') }}</span></a>
+    <a href="{{ url_for('lang', code='hi' if lang=='en' else 'en') }}" class="pill">{{ 'हिंदी' if lang=='en' else 'EN' }}</a>
+  </div>
+</nav>
+<main class="wrap">
+  {% for c, m in get_flashed_messages(with_categories=true) %}<div class="flash {{ c }}">{{ t(m) }}</div>{% endfor %}
+  {% block body %}{% endblock %}
+</main>
+<footer><b>ZAD OSINT</b> · <a href="{{ YT_URL }}" target="_blank" rel="noopener noreferrer">YouTube @zadosint</a></footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

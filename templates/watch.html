@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}{{ v.title }} · {{ BRAND }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">{% endblock %}
+{% block body %}
+<div class="player glass">
+  <video id="player" playsinline controls controlsList="nodownload" preload="metadata">
+    <source src="{{ url_for('stream', vid=v.id, t=token) }}" type="video/mp4">
+  </video>
+</div>
+<div class="card glass">
+  <h2>{{ v.title }}</h2>
+  <div class="meta">
+    <span class="badge">{{ CATS[v.category] }}</span>
+    <span class="badge soft"><i class="bi bi-hash"></i>{{ v.id }}</span>
+    <span class="badge soft"><i class="bi bi-eye"></i> {{ v.views }} {{ t('views') }}</span>
+  </div>
+  {% if v.description %}<p class="muted">{{ v.description }}</p>{% endif %}
+  <div class="actions">
+    {% if v.file_url %}<a class="btn" href="{{ v.file_url }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-cloud-arrow-down-fill"></i> {{ t('getf') }}</a>{% endif %}
+    <a class="btn yt" href="{{ YT_URL }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-youtube"></i> {{ t('yt') }}</a>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.min.js"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

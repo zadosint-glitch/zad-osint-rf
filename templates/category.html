@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="card glass narrow">
+  <span class="badge">{{ CATS[cat] }}</span>
+  <h2>{{ t('enter') }}</h2>
+  <form method="post" autocomplete="off">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <div class="field"><i class="bi bi-key-fill"></i>
+      <input name="code" maxlength="40" placeholder="{{ t('ph') }}" required autofocus></div>
+    <button class="btn" type="submit"><i class="bi bi-play-circle-fill"></i> {{ t('unlock') }}</button>
+  </form>
+  <p class="muted">{{ t('noc') }}</p>
+  <a class="btn yt" href="{{ YT_URL }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-youtube"></i> {{ t('getc') }}</a>
+  <a class="link" href="{{ url_for('index') }}"><i class="bi bi-arrow-left"></i> {{ t('back') }}</a>
+</div>
+{% endblock %}
